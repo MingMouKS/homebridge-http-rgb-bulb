@@ -9,8 +9,11 @@
     "description": "Bla Bla Bla",
 
     "accessories": [{
-        "accessory": "Fake-RGB",
-        "name": "RGB Bulb"
+        "accessory": "HttpRGB",
+        "name": "RGB Bulb",
+        "set_url": "http://192.168.1.100/rgb?color=0x%s",
+        "get_url": "http://192.168.1.100/rgb?format=hex",
+        "http_method": "GET"
     }],
 
     "platforms": []
