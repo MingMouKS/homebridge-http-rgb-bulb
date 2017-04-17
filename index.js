@@ -12,7 +12,6 @@ module.exports = function( homebridge ) {
 
 function RgbAccessory( log, config ) {
   this.log = log;
-  this.config = config;
   this.name = config.name;
   this.set_url = config.set_url;
   this.get_url = config.get_url;
@@ -24,7 +23,7 @@ function RgbAccessory( log, config ) {
     h: 0,
     s: 0,
     v: 0
-  }
+  };
 
   this.log( "Initialized '" + this.name + "'" );
 }
@@ -78,17 +77,14 @@ RgbAccessory.prototype.getServices = function() {
   lightbulbService
     .getCharacteristic( Characteristic.On )
     .on( 'get', function( callback ) {
-      bulb.getColor((err) => {
-        callback(err, bulb.brightness !== 0);
+      bulb.getColor((err, hsv) => {
+        callback(err, hsv.v !== 0);
       });
     } )
     .on( 'set', function( value, callback ) {
       bulb.log('Set Characteristic.On to ' + value);
-      value = value ? 100 : 0;
-      if ( (value !== 0 && bulb.hsv.v === 0 ) || ( value === 0 && bulb.hsv.v > 0 ) ) {
-        bulb.hsv.v = value;
-        bulb.setColor(bulb.hsv);
-      }
+      bulb.hsv.v = value ? (bulb.hsv.v > 0 ? bulb.hsv.v : 100) : 0;
+      bulb.setColor(bulb.hsv);
       callback();
     } );
 
